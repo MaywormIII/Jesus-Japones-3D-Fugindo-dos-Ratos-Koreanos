@@ -41,7 +41,6 @@ onready var upper_front_ray = get_node("MonotoriTestBuneco/Upper_Front_Ray")
 func _ready():
 	upper_front_ray.add_exception(get_node("./"))
 	front_ray.add_exception(get_node("./"))
-	print(midBlock.get_surface_material_count ( ))
 	anim.get_animation("run").set_loop(true)
 	coyoteJump = get_node("CoyoteJump")
 
@@ -119,7 +118,8 @@ func _physics_process(delta):
 		else:
 			targetAnim = "idle"
 	else:
-		airTime += 10*delta
+		if(!grab):
+			airTime += 10*delta
 		if(varJump> 0 and varJump < fullJump/1.7 and !grab):
 			targetAnim = "jumping"
 		elif(airTime>1 or grab):
@@ -127,8 +127,9 @@ func _physics_process(delta):
 		else:
 			targetAnim = "run"
 #	vira pra onde anda,mude o * para mexer na velocidade de girar
-	
-	if(varJump>0 and varJump<fullJump/2):
+	if(grab):
+		print(get_slide_collision(0))
+	elif(varJump>0 and varJump<fullJump/2):
 		facing += (analogVec.normalized() - facing) * 2 * delta
 	elif airTime>1:
 		facing += (analogVec.normalized() - facing) * 25 * delta
@@ -172,7 +173,7 @@ func _physics_process(delta):
 #	GRAB
 #	exits grab 
 	var grabLedge
-	if(airTime>1 and (!upper_front_ray.is_colliding() or Input.is_action_pressed("grab2") ) and front_ray.is_colliding()):
+	if(airTime>2 and (!upper_front_ray.is_colliding() or Input.is_action_pressed("grab2") ) and front_ray.is_colliding() and (varJump == 0 or varJump>10)):
 		if(varJump>fullJump/4):
 			jump = false
 			varJump = 0
@@ -220,7 +221,7 @@ func _physics_process(delta):
 	if !Input.is_action_pressed("jump") and (ground_ray.is_colliding() or grounded or coyoteJump.get_time_left() > 0 or is_on_wall() ):
 		jumpLock = false
 #	jump until varjump reaches 20 OR player releases jump
-	if(varJump != 0 and Input.is_action_pressed("jump") and varJump < fullJump):
+	if(varJump != 0 and Input.is_action_pressed("jump") and varJump < fullJump and !grab):
 		varJump += 1
 	
 
@@ -240,7 +241,7 @@ func _physics_process(delta):
 	wasOnFloor = is_on_floor()
 	
 	var prevPos = translation
-#	print( get_floor_normal( ))
+
 	#Faz ele simexer
 	moveVec = move_and_slide(moveVec, Vector3(0, 1, 0),false,4,0.6)
 	
