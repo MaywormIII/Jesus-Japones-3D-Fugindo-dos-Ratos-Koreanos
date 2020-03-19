@@ -120,6 +120,8 @@ func _physics_process(delta):
 	else:
 		if(!grab):
 			airTime += 10*delta
+		else:
+			airTime = 0
 		if(varJump> 0 and varJump < fullJump/1.7 and !grab):
 			targetAnim = "jumping"
 		elif(airTime>1 or grab):
@@ -128,7 +130,7 @@ func _physics_process(delta):
 			targetAnim = "run"
 #	vira pra onde anda,mude o * para mexer na velocidade de girar
 	if(grab):
-		print(get_slide_collision(0))
+		print(get_node("./CollisionShape"))
 	elif(varJump>0 and varJump<fullJump/2):
 		facing += (analogVec.normalized() - facing) * 2 * delta
 	elif airTime>1:
@@ -173,7 +175,7 @@ func _physics_process(delta):
 #	GRAB
 #	exits grab 
 	var grabLedge
-	if(airTime>2 and (!upper_front_ray.is_colliding() or Input.is_action_pressed("grab2") ) and front_ray.is_colliding() and (varJump == 0 or varJump>10)):
+	if(airTime>=0 and (!upper_front_ray.is_colliding() or Input.is_action_pressed("grab2") ) and front_ray.is_colliding() and (varJump == 0 or varJump>15)):
 		if(varJump>fullJump/4):
 			jump = false
 			varJump = 0
@@ -199,8 +201,10 @@ func _physics_process(delta):
 			grab = false
 	if(!grab):
 		moveVec.y = yspd - gravity
-	
-	
+		
+	if(airTime>5 and grabLock and Input.is_action_pressed("grab")):
+		grabLock = false
+	print(airTime)
 	if is_on_floor() || grab:
 		coyoteJump.start()
 #		letGoPosition = translation
