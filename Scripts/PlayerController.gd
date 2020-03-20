@@ -32,28 +32,34 @@ var coyoteJump = null
 var wasOnFloor = false
 var grab = false
 onready var anim = $MonotoriTestBuneco/AnimationPlayer
-onready var upperBlock = $MonotoriTestBuneco/Upper_Front_Ray/Front_Cube2
-onready var midBlock = $MonotoriTestBuneco/Front_Ray/Front_Cube
+onready var upperBlock = $Upper_Front_Ray/Cube
+onready var midBlock = $Front_Ray/Cube
 onready var ground_ray = get_node("Ground_Ray")
-onready var front_ray = get_node("MonotoriTestBuneco/Front_Ray")
-onready var upper_front_ray = get_node("MonotoriTestBuneco/Upper_Front_Ray")
+onready var front_ray = get_node("Front_Ray")
+onready var upper_front_ray = get_node("Upper_Front_Ray")
+onready var up_ray = get_node("MonotoriTestBuneco/Up_Ray")
+onready var down_ray = get_node("MonotoriTestBuneco/Down_Ray")
+onready var left_ray = get_node("MonotoriTestBuneco/Left_Ray")
+onready var right_ray = get_node("MonotoriTestBuneco/Right_Ray")
 
 func _ready():
 	upper_front_ray.add_exception(get_node("./"))
 	front_ray.add_exception(get_node("./"))
 	anim.get_animation("run").set_loop(true)
 	coyoteJump = get_node("CoyoteJump")
-
+func spawnDust():		# Spawn dust function
+	$DustSpawner.spawnDust()
 func _physics_process(delta):
+	
 #	change color based on colision
-	if upper_front_ray.is_colliding():
-		upperBlock.get_surface_material(0).albedo_color = Color(100,0,0)
-	else:
-		upperBlock.get_surface_material(0).albedo_color = Color(0,0,0)
-	if front_ray.is_colliding():
-		midBlock.get_surface_material(0).albedo_color = Color(100,0,0)
-	else:
-		midBlock.get_surface_material(0).albedo_color = Color(0,0,0)
+#	if upper_front_ray.is_colliding():
+#		upperBlock.get_surface_material(0).albedo_color = Color(100,0,0)
+#	else:
+#		upperBlock.get_surface_material(0).albedo_color = Color(0,0,0)
+#	if front_ray.is_colliding():
+#		midBlock.get_surface_material(0).albedo_color = Color(100,0,0)
+#	else:
+#		midBlock.get_surface_material(0).albedo_color = Color(0,0,0)
 		
 	
 	var grounded = is_on_floor()
@@ -89,16 +95,19 @@ func _physics_process(delta):
 		
 		mv.x = -Input.get_joy_axis(0, 0)
 		mv.z = -Input.get_joy_axis(0, 1)
+		
 		#O tanto q vc aumenta o vector da direção é o quanto ele da a viradinha
 		tiltMagnitude = mv.length()
 		
 		#Acho que é uma dead zone. Ainda tenho que experimentar sem isso
 		if tiltMagnitude <= 0.3:
+			
 			mv.x = 0
 			mv.z = 0
 		
+		
 	mv = mv.normalized()
-	
+
 	#Pega direção da camera
 	var b = Basis(get_viewport().get_camera().global_transform.basis)
 	b.z.y = 0 # Crush Y so movement doesn't go into ground
@@ -107,6 +116,11 @@ func _physics_process(delta):
 	
 	mv.z *= -1
 	mv.x *= -1
+	if tiltMagnitude >= 0.3:
+		front_ray.look_at(translation- mv,Vector3(0,-1,0) )
+		front_ray.rotation_degrees.x=90
+		upper_front_ray.look_at(translation- mv,Vector3(0,-1,0) )
+		upper_front_ray.rotation_degrees.x=90
 	
 	if mv.length() > 0:
 		analogVec = mv
@@ -115,8 +129,10 @@ func _physics_process(delta):
 		airTime = 0
 		if mv.length() > 0.5:
 			targetAnim = "run"
+			
 		else:
 			targetAnim = "idle"
+			spawnDust()
 	else:
 		if(!grab):
 			airTime += 10*delta
@@ -130,7 +146,7 @@ func _physics_process(delta):
 			targetAnim = "run"
 #	vira pra onde anda,mude o * para mexer na velocidade de girar
 	if(grab):
-		print(get_node("./CollisionShape"))
+		facing = -front_ray.get_collision_normal()
 	elif(varJump>0 and varJump<fullJump/2):
 		facing += (analogVec.normalized() - facing) * 2 * delta
 	elif airTime>1:
@@ -141,8 +157,9 @@ func _physics_process(delta):
 	facing = facing.normalized()
 	facing.y = 0
 	get_node("MonotoriTestBuneco").look_at(translation - facing, Vector3(0, 1, 0) + (tiltVec * 0.25))
-	
-	#uns negcio aí de fisica de fricção aí. tendi mt bem n. Sem isso ele não se move.
+
+
+	#MOVIMENTO
 	if is_on_floor():
 		var mt = Vector3(moveVec.x, moveVec.y, moveVec.z)
 		mt.y = 0
@@ -156,13 +173,24 @@ func _physics_process(delta):
 
 		if mv.length() > 0:
 			moveVec += mv * accelRate
-	elif mv.length() > 0:
-			moveVec += mv * airAccelRate
+	else:
+		if(grab):
+			if up_ray.is_colliding() and down_ray.is_colliding() and left_ray.is_colliding() and right_ray.is_colliding():
+				moveVec.y -= mv.x * airAccelRate
+			else:
+				moveVec.y = 0
+				grab = false
+			
+		else:
+			if mv.length() > 0:
+				moveVec += mv * airAccelRate
 	
 	#Gravidade
 	var yspd = moveVec.y
-	moveVec.y = 0
-		
+	if(grounded):
+		moveVec.y = 0
+	if(grab and tiltMagnitude <= 0.3):
+		moveVec.y = 0
 
 	var mSpd = maxSpd
 	if is_on_floor():
@@ -188,12 +216,13 @@ func _physics_process(delta):
 		grab = false
 		grabLock = false
 #	grabLock logic for jumping while grabbed
-	if is_on_wall() and Input.is_action_pressed("grab") and !grabLock:
+	if front_ray.is_colliding() and Input.is_action_pressed("grab") and !grabLock:
 		grab = true
 	
 #	grabbed state freezes movement
 	if(grab):
-		moveVec = Vector3(0,0,0)
+		
+		
 		
 #		exits grab and jump
 		if Input.is_action_just_pressed("jump"):
@@ -204,13 +233,12 @@ func _physics_process(delta):
 		
 	if(airTime>5 and grabLock and Input.is_action_pressed("grab")):
 		grabLock = false
-	print(airTime)
+
 	if is_on_floor() || grab:
 		coyoteJump.start()
 #		letGoPosition = translation
 		if not wasOnFloor:
-			pass
-#			spawnDust()
+			spawnDust()
 	
 #JUMP	
 #Logica de jumplock para evitar pulo continuo Se segurar espaço 
@@ -250,16 +278,18 @@ func _physics_process(delta):
 	moveVec = move_and_slide(moveVec, Vector3(0, 1, 0),false,4,0.6)
 	
 	if not anim.is_playing() or currentAnim != targetAnim:
-#		if targetAnim == "PopRun-loop":
-#			$DustAnimation.play("PopRunDust")
-#		else:
-#			$DustAnimation.stop()
+		if targetAnim == "run":
+			$DustAnimation.play("run")
+			
+		else:
+			$DustAnimation.stop()
 		
 		anim.play(targetAnim, 0.15)
 		currentAnim = targetAnim
 
 	if(state == "MOVING"):
 		anim.playback_speed = stepify(tiltMagnitude,0.01)*1.7;
+		$DustAnimation.playback_speed = stepify(tiltMagnitude,0.01)*1.7;
 	else:
 		anim.playback_speed = 1
 		
