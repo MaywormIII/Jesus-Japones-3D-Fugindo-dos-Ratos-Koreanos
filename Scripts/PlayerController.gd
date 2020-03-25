@@ -32,21 +32,21 @@ var coyoteJump = null
 var wasOnFloor = false
 var grab = false
 var grabStop = true
-onready var anim = $MonotoriTestBuneco/AnimationPlayer
+onready var anim = $ArmatureNGraphics/AnimationPlayer
 onready var upperBlock = $Upper_Front_Ray/Cube
 onready var midBlock = $Front_Ray/Cube
 onready var ground_ray = get_node("Ground_Ray")
 onready var front_ray = get_node("Front_Ray")
 onready var upper_front_ray = get_node("Upper_Front_Ray")
-onready var up_ray = get_node("MonotoriTestBuneco/Up_Ray")
-onready var down_ray = get_node("MonotoriTestBuneco/Down_Ray")
-onready var left_ray = get_node("MonotoriTestBuneco/Left_Ray")
-onready var right_ray = get_node("MonotoriTestBuneco/Right_Ray")
+onready var up_ray = get_node("ArmatureNGraphics/Up_Ray")
+onready var down_ray = get_node("ArmatureNGraphics/Down_Ray")
+onready var left_ray = get_node("ArmatureNGraphics/Left_Ray")
+onready var right_ray = get_node("ArmatureNGraphics/Right_Ray")
 
 func _ready():
 	upper_front_ray.add_exception(get_node("./"))
 	front_ray.add_exception(get_node("./"))
-	anim.get_animation("run").set_loop(true)
+	anim.get_animation("Run").set_loop(true)
 	coyoteJump = get_node("CoyoteJump")
 func spawnDust():		# Spawn dust function
 	$DustSpawner.spawnDust()
@@ -129,10 +129,10 @@ func _physics_process(delta):
 	if is_on_floor():
 		airTime = 0
 		if mv.length() > 0.5:
-			targetAnim = "run"
+			targetAnim = "Run"
 			
 		else:
-			targetAnim = "idle"
+			targetAnim = "Idle"
 			
 	else:
 		if(!grab):
@@ -140,11 +140,11 @@ func _physics_process(delta):
 		else:
 			airTime = 0
 		if(varJump> 0 and varJump < fullJump/1.7 and !grab):
-			targetAnim = "jumping"
+			targetAnim = "Jumping"
 		elif(airTime>1 or grab):
-			targetAnim = "jump"
+			targetAnim = "Jump"
 		else:
-			targetAnim = "run"
+			targetAnim = "Run"
 #	vira pra onde anda,mude o * para mexer na velocidade de girar
 	if(grab):
 		facing = -front_ray.get_collision_normal()
@@ -157,7 +157,7 @@ func _physics_process(delta):
 
 	facing = facing.normalized()
 	facing.y = 0
-	get_node("MonotoriTestBuneco").look_at(translation - facing, Vector3(0, 1, 0) + (tiltVec * 0.25))
+	get_node("ArmatureNGraphics").look_at(translation - facing, Vector3(0, 1, 0) + (tiltVec * 0.25))
 
 
 	#MOVIMENTO
@@ -283,8 +283,8 @@ func _physics_process(delta):
 	
 #	animation
 	if not anim.is_playing() or currentAnim != targetAnim:
-		if targetAnim == "run":
-			$DustAnimation.play("run")
+		if targetAnim == "Run":
+			$DustAnimation.play("Run")
 			
 		else:
 			$DustAnimation.stop()

@@ -3,7 +3,7 @@
 [ext_resource path="res://Scripts/PlayerController.gd" type="Script" id=1]
 [ext_resource path="res://Enviroments/ToonShaderTest.tres" type="Environment" id=2]
 [ext_resource path="res://Materials/MainPyramid.tres" type="Material" id=3]
-[ext_resource path="res://Instances/Characters/MonotoriTestBuneco.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Instances/Characters/Exorcista/Exorcista.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scripts/TargetRange.gd" type="Script" id=5]
 [ext_resource path="res://Scripts/CamBase.gd" type="Script" id=6]
 [ext_resource path="res://dust/DustSpawner.tscn" type="PackedScene" id=7]
@@ -62,85 +62,60 @@ environment = ExtResource( 2 )
 transform = Transform( -4.32252e-08, 1.2361, -4.32252e-08, 0, -5.40316e-08, -0.988877, -0.988877, -5.40316e-08, 1.88943e-15, 0, 0.618151, -0.00297166 )
 shape = SubResource( 1 )
 
-[node name="MonotoriTestBuneco" parent="." instance=ExtResource( 4 )]
-transform = Transform( -0.1, 0, -8.74228e-09, 0, 0.1, 0, 8.74228e-09, 0, -0.1, 0, 0, 0 )
+[node name="ArmatureNGraphics" parent="." instance=ExtResource( 4 )]
+transform = Transform( -0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 0, 0, 0 )
 
-[node name="Up_Ray" type="RayCast" parent="MonotoriTestBuneco"]
-transform = Transform( -10.2734, 3.87577e-07, -3.72854e-14, 0, -1.93789e-07, -9.75706, -8.98126e-07, -4.43337, 4.26495e-07, 1.74846e-09, 11, -0.02 )
+[node name="Up_Ray" type="RayCast" parent="ArmatureNGraphics"]
+transform = Transform( -2.05468, 1.33884e-07, -1.28798e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -0.886674, 8.5299e-08, 6.03984e-10, 2.2, -0.004 )
 visible = false
 enabled = true
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Cube" type="CSGMesh" parent="MonotoriTestBuneco/Up_Ray"]
+[node name="Cube" type="CSGMesh" parent="ArmatureNGraphics/Up_Ray"]
 transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
 mesh = SubResource( 2 )
 material = ExtResource( 3 )
 
-[node name="Down_Ray" type="RayCast" parent="MonotoriTestBuneco"]
-transform = Transform( -10.2734, 3.87577e-07, -3.72854e-14, 0, -1.93789e-07, -9.75706, -8.98126e-07, -4.43337, 4.26495e-07, 1.74846e-09, 4, -0.02 )
+[node name="Down_Ray" type="RayCast" parent="ArmatureNGraphics"]
+transform = Transform( -2.05468, 1.33884e-07, -1.28798e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -0.886674, 8.5299e-08, 6.03984e-10, 0.8, -0.004 )
 visible = false
 enabled = true
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Cube" type="CSGMesh" parent="MonotoriTestBuneco/Down_Ray"]
+[node name="Cube" type="CSGMesh" parent="ArmatureNGraphics/Down_Ray"]
 transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
 mesh = SubResource( 2 )
 material = ExtResource( 3 )
 
-[node name="Left_Ray" type="RayCast" parent="MonotoriTestBuneco"]
-transform = Transform( -10.2734, 3.87577e-07, -3.72854e-14, 0, -1.93789e-07, -9.75706, -8.98126e-07, -4.43337, 4.26495e-07, -3, 6.93, -0.0200003 )
+[node name="Left_Ray" type="RayCast" parent="ArmatureNGraphics"]
+transform = Transform( -2.05468, 1.33884e-07, -1.28798e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -0.886674, 8.5299e-08, -0.6, 1.386, -0.0040001 )
 visible = false
 enabled = true
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Cube" type="CSGMesh" parent="MonotoriTestBuneco/Left_Ray"]
+[node name="Cube" type="CSGMesh" parent="ArmatureNGraphics/Left_Ray"]
 transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
 mesh = SubResource( 2 )
 material = ExtResource( 3 )
 
-[node name="Right_Ray" type="RayCast" parent="MonotoriTestBuneco"]
-transform = Transform( -10.2734, 3.87577e-07, -3.72854e-14, 0, -1.93789e-07, -9.75706, -8.98126e-07, -4.43337, 4.26495e-07, 3, 6.93, -0.0199997 )
+[node name="Right_Ray" type="RayCast" parent="ArmatureNGraphics"]
+transform = Transform( -2.05468, 1.33884e-07, -1.28798e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -0.886674, 8.5299e-08, 0.6, 1.386, -0.0039999 )
 visible = false
 enabled = true
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Cube" type="CSGMesh" parent="MonotoriTestBuneco/Right_Ray"]
+[node name="Cube" type="CSGMesh" parent="ArmatureNGraphics/Right_Ray"]
 transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
 mesh = SubResource( 2 )
 material = ExtResource( 3 )
-
-[node name="StatePanel" type="Panel" parent="."]
-margin_right = 260.0
-margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="StatePanel"]
-margin_top = 1.47018
-margin_right = 260.0
-margin_bottom = 15.4702
-text = "Current State:"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="StateName" type="Label" parent="StatePanel"]
-margin_top = 20.0
-margin_right = 260.0
-margin_bottom = 34.0
-custom_colors/font_color = Color( 1, 0.984314, 0.0235294, 1 )
-text = "State Name"
-align = 1
 
 [node name="TargetRange" type="Area" parent="."]
 input_ray_pickable = false
