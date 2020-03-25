@@ -6,7 +6,7 @@
 background_mode = 2
 background_sky = SubResource( 1 )
 background_sky_orientation = Basis( -0.083, 0, 0, 0, 1, 0, 0, 0, 1 )
-ambient_light_color = Color( 0.772549, 0.670588, 0.568627, 1 )
+ambient_light_color = Color( 0.796078, 0.427451, 0.184314, 1 )
 ambient_light_energy = 1.52
 fog_enabled = true
 fog_color = Color( 0.501961, 0.6, 0.701961, 1 )

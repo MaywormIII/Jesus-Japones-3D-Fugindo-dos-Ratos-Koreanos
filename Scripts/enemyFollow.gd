@@ -28,35 +28,37 @@ var state = State.ACTIVE
 var hangingFrom = null
 var letGoPosition = Vector3()
 var zLook = 100
+onready var player = get_tree().get_current_scene().get_node("Player")
+
 func spawnDust():		# Spawn dust function
 	$DustSpawner.spawnDust()
 
 func _ready():
 	coyoteJump = get_node("CoyoteJump")
-	
 func _physics_process(delta):
 	
 	var mv = Vector3()
 
-	var diff = get_node("../Player").translation - translation
-	diff.y = 0
-	if(diff.length()>0.3 and diff.length()<20):
+	var diff = player.translation - translation
+	print()
+	
+	if(diff.length()>0.5 and diff.length()<18):
 		mv += diff
 		mv = mv.normalized()
 		moveVec += mv * accelRate
 
-	look_at(Vector3(get_node("../Player").translation.x,
-		get_node("../Player").translation.y+zLook,
-		get_node("../Player").translation.z)
+	look_at(Vector3(player.translation.x,
+		player.translation.y+zLook,
+		player.translation.z)
 		,Vector3(0,1,0))
 	if(diff.length()<15):
 		if(zLook>0):
-			zLook-=delta*100
+			zLook-=delta*50
 	elif(zLook<100):
-			zLook+=delta*50
-	if(diff.length()<1):
+			zLook+=delta*25
+	if(diff.length()<0.5):
 #		if(get_node("../Player").maxSpd>maxSpd*1.1):
-		get_node("../Player").maxSpd -= 1*delta
+		player.maxSpd -= 0
 	if moveVec.length() > maxSpd:
 		moveVec = moveVec.normalized() * maxSpd
 	

@@ -17,7 +17,7 @@ var gravity = 0.6
 var state = "IDLE"
 var jumpSpd = 6
 #time of the jump
-const fullJump= 35
+const fullJump= 36
 #if != 0 is jumping
 
 var varJump = 0
@@ -31,6 +31,7 @@ var jump
 var coyoteJump = null
 var wasOnFloor = false
 var grab = false
+var grabStop = true
 onready var anim = $MonotoriTestBuneco/AnimationPlayer
 onready var upperBlock = $Upper_Front_Ray/Cube
 onready var midBlock = $Front_Ray/Cube
@@ -50,7 +51,6 @@ func _ready():
 func spawnDust():		# Spawn dust function
 	$DustSpawner.spawnDust()
 func _physics_process(delta):
-	
 #	change color based on colision
 #	if upper_front_ray.is_colliding():
 #		upperBlock.get_surface_material(0).albedo_color = Color(100,0,0)
@@ -116,7 +116,8 @@ func _physics_process(delta):
 	
 	mv.z *= -1
 	mv.x *= -1
-	if tiltMagnitude >= 0.3:
+	if tiltMagnitude >= 0.3 and !grab:
+#		pauzoes de grab
 		front_ray.look_at(translation- mv,Vector3(0,-1,0) )
 		front_ray.rotation_degrees.x=90
 		upper_front_ray.look_at(translation- mv,Vector3(0,-1,0) )
@@ -132,7 +133,7 @@ func _physics_process(delta):
 			
 		else:
 			targetAnim = "idle"
-			spawnDust()
+			
 	else:
 		if(!grab):
 			airTime += 10*delta
@@ -173,17 +174,8 @@ func _physics_process(delta):
 
 		if mv.length() > 0:
 			moveVec += mv * accelRate
-	else:
-		if(grab):
-			if up_ray.is_colliding() and down_ray.is_colliding() and left_ray.is_colliding() and right_ray.is_colliding():
-				moveVec.y -= mv.x * airAccelRate
-			else:
-				moveVec.y = 0
-				grab = false
-			
-		else:
-			if mv.length() > 0:
-				moveVec += mv * airAccelRate
+	elif mv.length() > 0:
+			moveVec += mv * airAccelRate
 	
 	#Gravidade
 	var yspd = moveVec.y
@@ -222,22 +214,22 @@ func _physics_process(delta):
 #	grabbed state freezes movement
 	if(grab):
 		
-		
-		
+		moveVec = Vector3(0,0,0)
+		grabStop = false
 #		exits grab and jump
 		if Input.is_action_just_pressed("jump"):
 			grabLock = true
 			grab = false
 	if(!grab):
 		moveVec.y = yspd - gravity
-		
+		grabStop = true
 	if(airTime>5 and grabLock and Input.is_action_pressed("grab")):
 		grabLock = false
 
 	if is_on_floor() || grab:
 		coyoteJump.start()
 #		letGoPosition = translation
-		if not wasOnFloor:
+		if not wasOnFloor and !grab:
 			spawnDust()
 	
 #JUMP	
@@ -259,8 +251,10 @@ func _physics_process(delta):
 
 		if varJump<fullJump/2:
 			moveVec.y = jumpSpd
+		elif varJump<fullJump/3:
+			moveVec.y = jumpSpd/3
 		else:
-			moveVec.y = jumpSpd/4
+			moveVec.y = jumpSpd/6
 	if !Input.is_action_pressed("jump") or is_on_ceiling():
 		varJump = 0
 # jumpar
@@ -269,7 +263,7 @@ func _physics_process(delta):
 		varJump = 1
 		coyoteJump.stop()
 		jumpLock = true	
-	
+
 	wasOnFloor = is_on_floor()
 	
 	var prevPos = translation
@@ -277,6 +271,17 @@ func _physics_process(delta):
 	#Faz ele simexer
 	moveVec = move_and_slide(moveVec, Vector3(0, 1, 0),false,4,0.6)
 	
+	
+	
+	#	"""""MAGICA"""""-dustzinho qnd aperta trigger
+	if Input.is_action_pressed("grab2"):
+		spawnDust()
+	
+	
+	
+	
+	
+#	animation
 	if not anim.is_playing() or currentAnim != targetAnim:
 		if targetAnim == "run":
 			$DustAnimation.play("run")
