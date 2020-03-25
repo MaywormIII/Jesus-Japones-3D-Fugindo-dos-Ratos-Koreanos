@@ -3,8 +3,9 @@
 [ext_resource path="res://Scripts/PlayerController.gd" type="Script" id=1]
 [ext_resource path="res://Instances/Characters/MonotoriTestBuneco.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scripts/TargetRange.gd" type="Script" id=5]
-[ext_resource path="res://dust/DustSpawner.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Instances/Objects/dust/DustSpawner.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Instances/Objects/dust/Dust.tscn" type="PackedScene" id=8]
+
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.216257

@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/Tree.dae-83d8433e446a6ce0a642a781643e0e7c.scn"
+path="res://.import/Armature.glb-4b4aaf51db3da56c94246ccbd94deb4e.scn"
 
 [deps]
 
-source_file="res://3DAssets/Objects/Tree.dae"
-dest_files=[ "res://.import/Tree.dae-83d8433e446a6ce0a642a781643e0e7c.scn" ]
+source_file="res://3DAssets/Characters/Player/Armature.glb"
+dest_files=[ "res://.import/Armature.glb-4b4aaf51db3da56c94246ccbd94deb4e.scn" ]
 
 [params]
 
