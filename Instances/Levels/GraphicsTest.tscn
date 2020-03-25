@@ -1034,18 +1034,6 @@ script = ExtResource( 12 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.83895, 0.0318601, 33.8084 )
 script = ExtResource( 12 )
 
-[node name="Player13" parent="Node" instance=ExtResource( 13 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33.3521, 0.031862, 4.77406 )
-script = ExtResource( 12 )
-
-[node name="Player12" parent="Node" instance=ExtResource( 13 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33.3521, 0.031862, 0.812981 )
-script = ExtResource( 12 )
-
-[node name="Player11" parent="Node" instance=ExtResource( 13 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33.3521, 0.031862, -4.0554 )
-script = ExtResource( 12 )
-
 [node name="Player10" parent="Node" instance=ExtResource( 13 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 33.3521, 0.031862, -11.3618 )
 script = ExtResource( 12 )
