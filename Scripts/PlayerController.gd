@@ -42,7 +42,7 @@ onready var up_ray = get_node("ArmatureNGraphics/Up_Ray")
 onready var down_ray = get_node("ArmatureNGraphics/Down_Ray")
 onready var left_ray = get_node("ArmatureNGraphics/Left_Ray")
 onready var right_ray = get_node("ArmatureNGraphics/Right_Ray")
-
+var targetAnim = null
 func _ready():
 	upper_front_ray.add_exception(get_node("./"))
 	front_ray.add_exception(get_node("./"))
@@ -73,7 +73,7 @@ func _physics_process(delta):
 	#Viradinha
 	var tiltMagnitude = 0
 	
-	var targetAnim = null
+	
 	
 	#INPUT
 	if Input.is_action_pressed("move_r"):
@@ -130,31 +130,41 @@ func _physics_process(delta):
 		airTime = 0
 		if mv.length() > 0.5:
 			targetAnim = "Run"
-			
 		else:
-			targetAnim = "Idle"
-			
+			targetAnim = "Idle"	
 	else:
 		if(!grab):
 			airTime += 10*delta
 		else:
 			airTime = 0
-		if(varJump> 0 and varJump < fullJump/1.7 and !grab):
-			targetAnim = "Jumping"
-		elif(airTime>1 or grab):
-			targetAnim = "Jump"
-		else:
-			targetAnim = "Run"
+		if(grab and (targetAnim=="Jumping From Wall" || targetAnim=="Jump From Wall") ):
+			targetAnim = "Hanging Idle"
+		if Input.is_action_just_pressed("jump") and targetAnim == "Hanging Idle" and !grabLock:
+			targetAnim = "Jumping From Wall"
+		
+		if(targetAnim != "Jumping From Wall" || targetAnim=="Jump From Wall"):
+			if(varJump> 0 and varJump < fullJump/1.7 and !grab):
+				targetAnim = "Jumping"
+			elif(grab):
+				targetAnim = "Hanging Idle"
+			elif(airTime>1):
+				targetAnim = "Jump"
+			else:
+				targetAnim = "Run"
+	
 #	vira pra onde anda,mude o * para mexer na velocidade de girar
 	if(grab):
 		facing = -front_ray.get_collision_normal()
+		analogVec = -front_ray.get_collision_normal()
+	elif(targetAnim=="Jumping From Wall"):
+		pass
 	elif(varJump>0 and varJump<fullJump/2):
 		facing += (analogVec.normalized() - facing) * 2 * delta
 	elif airTime>1:
 		facing += (analogVec.normalized() - facing) * 25 * delta
 	else:
 		facing += (analogVec.normalized() - facing) * 15 * delta
-
+	print(analogVec)
 	facing = facing.normalized()
 	facing.y = 0
 	get_node("ArmatureNGraphics").look_at(translation - facing, Vector3(0, 1, 0) + (tiltVec * 0.25))
@@ -201,6 +211,7 @@ func _physics_process(delta):
 			varJump = 0
 		grab = true
 		grabLedge = true
+		
 	if !Input.is_action_pressed("grab") and !grabLedge:
 		grab = false
 		grabLock = false
@@ -210,10 +221,10 @@ func _physics_process(delta):
 #	grabLock logic for jumping while grabbed
 	if front_ray.is_colliding() and Input.is_action_pressed("grab") and !grabLock:
 		grab = true
+		
 	
 #	grabbed state freezes movement
 	if(grab):
-		
 		moveVec = Vector3(0,0,0)
 		grabStop = false
 #		exits grab and jump
@@ -276,11 +287,6 @@ func _physics_process(delta):
 	#	"""""MAGICA"""""-dustzinho qnd aperta trigger
 	if Input.is_action_pressed("grab2"):
 		spawnDust()
-	
-	
-	
-	
-	
 #	animation
 	if not anim.is_playing() or currentAnim != targetAnim:
 		if targetAnim == "Run":
@@ -288,10 +294,12 @@ func _physics_process(delta):
 			
 		else:
 			$DustAnimation.stop()
-		
-		anim.play(targetAnim, 0.15)
+		if(targetAnim == "Jumping From Wall"):
+			anim.play(targetAnim, 0)
+		else:
+			anim.play(targetAnim, 0.15)
 		currentAnim = targetAnim
-
+#  note: add cumChamber
 	if(state == "MOVING"):
 		anim.playback_speed = stepify(tiltMagnitude,0.01)*1.7;
 		$DustAnimation.playback_speed = stepify(tiltMagnitude,0.01)*1.7;
@@ -306,7 +314,6 @@ func _physics_process(delta):
 		tiltVec.y -= tiltVec.y * .5
 		tiltVec.z -= tiltVec.z * .5
 #STATE CHOOSER
-	
 	if(airTime<1):
 		if stepify(moveVec.x, 0.1) == 0 and stepify(moveVec.z, 0.1) == 0:
 			state = "IDLE"
