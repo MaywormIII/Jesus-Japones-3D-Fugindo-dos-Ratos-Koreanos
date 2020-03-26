@@ -247,6 +247,7 @@ func _physics_process(delta):
 			else:
 				grabLedgeSnapUp = true
 			grabLedgeSnapLock = true
+		get_node(".").translation+=facing*delta*3
 		if(grabLedgeSnapUp and !up_ray.is_colliding()):
 			move_and_slide(Vector3(0,-1.4,0), Vector3(0, 1, 0))	
 		if(!grabLedgeSnapUp and up_ray.is_colliding()):
