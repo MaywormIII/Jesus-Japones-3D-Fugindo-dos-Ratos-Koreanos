@@ -9,7 +9,7 @@ var maxSpd = 7
 var moveVec = Vector3()
 var tiltVec = Vector3()
 var analogVec = Vector3()
-
+var ledgeAccel = 0
 var friction = 1
 var accelRate = 0.5+ friction
 var gravity = 0.6
@@ -19,7 +19,7 @@ var jumpSpd = 6
 #time of the jump
 const fullJump= 36
 #if != 0 is jumping
-
+var grabLedge = false
 var varJump = 0
 var grabLock = false
 var wall_jumps = 0
@@ -32,6 +32,7 @@ var coyoteJump = null
 var wasOnFloor = false
 var grab = false
 var grabStop = true
+var grabLedgeSnapUp = false
 onready var anim = $ArmatureNGraphics/AnimationPlayer
 onready var upperBlock = $Upper_Front_Ray/Cube
 onready var midBlock = $Front_Ray/Cube
@@ -122,10 +123,9 @@ func _physics_process(delta):
 		front_ray.rotation_degrees.x=90
 		upper_front_ray.look_at(translation- mv,Vector3(0,-1,0) )
 		upper_front_ray.rotation_degrees.x=90
-	
+		
 	if mv.length() > 0:
 		analogVec = mv
-	
 	if is_on_floor():
 		airTime = 0
 		if mv.length() > 0.5:
@@ -164,7 +164,6 @@ func _physics_process(delta):
 		facing += (analogVec.normalized() - facing) * 25 * delta
 	else:
 		facing += (analogVec.normalized() - facing) * 15 * delta
-	print(analogVec)
 	facing = facing.normalized()
 	facing.y = 0
 	get_node("ArmatureNGraphics").look_at(translation - facing, Vector3(0, 1, 0) + (tiltVec * 0.25))
@@ -191,8 +190,7 @@ func _physics_process(delta):
 	var yspd = moveVec.y
 	if(grounded):
 		moveVec.y = 0
-	if(grab and tiltMagnitude <= 0.3):
-		moveVec.y = 0
+	
 
 	var mSpd = maxSpd
 	if is_on_floor():
@@ -204,14 +202,17 @@ func _physics_process(delta):
 
 #	GRAB
 #	exits grab 
-	var grabLedge
-	if(airTime>=0 and (!upper_front_ray.is_colliding() or Input.is_action_pressed("grab2") ) and front_ray.is_colliding() and (varJump == 0 or varJump>15)):
+
+	
+	
+	var grabLedgeSnapLock = true
+	if(airTime>=2 and (!upper_front_ray.is_colliding() or Input.is_action_pressed("grab2") ) and front_ray.is_colliding() and (varJump == 0 or varJump>15)):
 		if(varJump>fullJump/4):
 			jump = false
 			varJump = 0
 		grab = true
 		grabLedge = true
-		
+		grabLedgeSnapLock = false
 	if !Input.is_action_pressed("grab") and !grabLedge:
 		grab = false
 		grabLock = false
@@ -225,6 +226,7 @@ func _physics_process(delta):
 	
 #	grabbed state freezes movement
 	if(grab):
+		
 		moveVec = Vector3(0,0,0)
 		grabStop = false
 #		exits grab and jump
@@ -236,7 +238,20 @@ func _physics_process(delta):
 		grabStop = true
 	if(airTime>5 and grabLock and Input.is_action_pressed("grab")):
 		grabLock = false
-
+	
+	if(grabLedge):
+#		moveVec = move_and_slide(moveVec, facing)
+		if !grabLedgeSnapLock:
+			if up_ray.is_colliding():
+				grabLedgeSnapUp = false
+			else:
+				grabLedgeSnapUp = true
+			grabLedgeSnapLock = true
+		if(grabLedgeSnapUp and !up_ray.is_colliding()):
+			move_and_slide(Vector3(0,-1.4,0), Vector3(0, 1, 0))	
+		if(!grabLedgeSnapUp and up_ray.is_colliding()):
+			move_and_slide(Vector3(0,1.4,0), Vector3(0, 1, 0))	
+	
 	if is_on_floor() || grab:
 		coyoteJump.start()
 #		letGoPosition = translation
@@ -251,6 +266,7 @@ func _physics_process(delta):
 		if is_on_wall():
 			wall_jumps-=1
 		jump = true
+		grabLedge = false
 	else:
 		jump = false
 	if !Input.is_action_pressed("jump") and (ground_ray.is_colliding() or grounded or coyoteJump.get_time_left() > 0 or is_on_wall() ):
@@ -260,7 +276,7 @@ func _physics_process(delta):
 		varJump += 1
 	
 
-		if varJump<fullJump/2:
+		if varJump<fullJump/1.5:
 			moveVec.y = jumpSpd
 		elif varJump<fullJump/3:
 			moveVec.y = jumpSpd/3
@@ -280,8 +296,9 @@ func _physics_process(delta):
 	var prevPos = translation
 
 	#Faz ele simexer
-	moveVec = move_and_slide(moveVec, Vector3(0, 1, 0),false,4,0.6)
-	
+#	moveVec = move_and_slide(moveVec, Vector3(0, 1, 0),false,4,0.6)
+	var step = 0.01
+	moveVec = move_and_slide(Vector3(stepify(moveVec.x,step),stepify(moveVec.y,step),stepify(moveVec.z,step)), Vector3(0, 1, 0),false,4,0.6)
 	
 	
 	#	"""""MAGICA"""""-dustzinho qnd aperta trigger
@@ -301,6 +318,8 @@ func _physics_process(delta):
 		currentAnim = targetAnim
 #  note: add cumChamber
 	if(state == "MOVING"):
+		if(moveVec.length()>=maxSpd/1.1):
+			spawnDust()
 		anim.playback_speed = stepify(tiltMagnitude,0.01)*1.7;
 		$DustAnimation.playback_speed = stepify(tiltMagnitude,0.01)*1.7;
 	else:

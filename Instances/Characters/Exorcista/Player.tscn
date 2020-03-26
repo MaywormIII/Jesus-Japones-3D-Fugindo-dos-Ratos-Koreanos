@@ -66,12 +66,9 @@ shape = SubResource( 1 )
 transform = Transform( -0.5, 0, -7.54979e-08, 0, 0.5, 0, 7.54979e-08, 0, -0.5, 0, 0, 0 )
 
 [node name="Up_Ray" type="RayCast" parent="ArmatureNGraphics"]
-transform = Transform( -2.05468, 1.33884e-07, -1.28798e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -0.886674, 8.5299e-08, 6.03984e-10, 2.2, -0.004 )
+transform = Transform( -2.05468, 1.77214e-07, -1.70481e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -1.17363, 1.12905e-07, 6.03984e-10, 2.02326, -0.004 )
 visible = false
 enabled = true
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Cube" type="CSGMesh" parent="ArmatureNGraphics/Up_Ray"]
 transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
@@ -79,20 +76,18 @@ mesh = SubResource( 2 )
 material = ExtResource( 3 )
 
 [node name="Down_Ray" type="RayCast" parent="ArmatureNGraphics"]
-transform = Transform( -2.05468, 1.33884e-07, -1.28798e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -0.886674, 8.5299e-08, 6.03984e-10, 0.8, -0.004 )
+transform = Transform( -2.05468, 1.77214e-07, -1.70481e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -1.17363, 1.12905e-07, 6.03984e-10, 0.8, -0.004 )
 visible = false
 enabled = true
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Cube" type="CSGMesh" parent="ArmatureNGraphics/Down_Ray"]
 transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
+visible = false
 mesh = SubResource( 2 )
 material = ExtResource( 3 )
 
 [node name="Left_Ray" type="RayCast" parent="ArmatureNGraphics"]
-transform = Transform( -2.05468, 1.33884e-07, -1.28798e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -0.886674, 8.5299e-08, -0.6, 1.386, -0.0040001 )
+transform = Transform( -2.05468, 1.77214e-07, -1.70481e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -1.17363, 1.12905e-07, -0.6, 1.386, -0.0040001 )
 visible = false
 enabled = true
 __meta__ = {
@@ -105,7 +100,7 @@ mesh = SubResource( 2 )
 material = ExtResource( 3 )
 
 [node name="Right_Ray" type="RayCast" parent="ArmatureNGraphics"]
-transform = Transform( -2.05468, 1.33884e-07, -1.28798e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -0.886674, 8.5299e-08, 0.6, 1.386, -0.0039999 )
+transform = Transform( -2.05468, 1.77214e-07, -1.70481e-14, 0, -3.87578e-08, -1.95141, -3.10247e-07, -1.17363, 1.12905e-07, 0.6, 1.386, -0.0039999 )
 visible = false
 enabled = true
 __meta__ = {
@@ -113,6 +108,36 @@ __meta__ = {
 }
 
 [node name="Cube" type="CSGMesh" parent="ArmatureNGraphics/Right_Ray"]
+transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
+mesh = SubResource( 2 )
+material = ExtResource( 3 )
+
+[node name="Ground_Ray" type="RayCast" parent="."]
+transform = Transform( 1.05927, 0, 0, 0, 1.77843, 0, 0, 0, 1.05927, -0.000701666, 1.0764, -0.0256419 )
+visible = false
+enabled = true
+cast_to = Vector3( 0, -0.955, 0 )
+collide_with_areas = true
+
+[node name="Front_Ray" type="RayCast" parent="."]
+transform = Transform( 1.05292, 0, 0, 0, -1.96834e-08, -1, 0, 0.554158, -5.37926e-08, -0.000286222, 0.819521, -0.00971683 )
+visible = false
+enabled = true
+
+[node name="Cube" type="CSGMesh" parent="Front_Ray"]
+transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 0, 0.0247413, 0, -0.520305, 0 )
+mesh = SubResource( 2 )
+material = ExtResource( 3 )
+
+[node name="Upper_Front_Ray" type="RayCast" parent="."]
+transform = Transform( 1.02734, 0, 0, 0, -1.93789e-08, -0.975706, 0, 0.619005, -5.9549e-08, -0.000286222, 1.26001, -0.0276859 )
+visible = false
+enabled = true
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Cube" type="CSGMesh" parent="Upper_Front_Ray"]
 transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
 mesh = SubResource( 2 )
 material = ExtResource( 3 )
@@ -125,46 +150,12 @@ script = ExtResource( 5 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.636935, 0 )
 shape = SubResource( 3 )
 
+[node name="DustSpawner" parent="." instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1.27705, 0, 0, -0.000276594 )
+
 [node name="CoyoteJump" type="Timer" parent="."]
 wait_time = 0.15
 one_shot = true
-
-[node name="Ground_Ray" type="RayCast" parent="."]
-transform = Transform( 1.05927, 0, 0, 0, 1.77843, 0, 0, 0, 1.05927, -0.000701666, 1.0764, -0.0256419 )
-enabled = true
-cast_to = Vector3( 0, -0.955, 0 )
-collide_with_areas = true
-
-[node name="Front_Ray" type="RayCast" parent="."]
-transform = Transform( 1.05292, 0, 0, 0, -1.96834e-08, -1, 0, 0.554158, -5.37926e-08, -0.000286222, 0.819521, -0.00971683 )
-visible = false
-enabled = true
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Cube" type="CSGMesh" parent="Front_Ray"]
-transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 0, 0.0247413, 0, -0.520305, 0 )
-visible = false
-mesh = SubResource( 2 )
-material = ExtResource( 3 )
-
-[node name="DustSpawner" parent="." instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1.27705, 0, 0, -0.000276594 )
-visible = false
-
-[node name="Upper_Front_Ray" type="RayCast" parent="."]
-transform = Transform( 1.02734, 0, 0, 0, -1.93789e-08, -0.975706, 0, 0.545584, -5.24858e-08, -0.000286222, 1.28024, -0.00205628 )
-visible = false
-enabled = true
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Cube" type="CSGMesh" parent="Upper_Front_Ray"]
-transform = Transform( 0.0289312, 0, 0, 0, 0.479394, 0, 0, 3.55271e-15, 0.0247413, 0, -0.520305, 0 )
-mesh = SubResource( 2 )
-material = ExtResource( 3 )
 
 [node name="DustAnimation" type="AnimationPlayer" parent="."]
 anims/run = SubResource( 4 )
