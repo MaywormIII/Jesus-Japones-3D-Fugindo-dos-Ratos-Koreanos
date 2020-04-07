@@ -47,7 +47,7 @@ var targetAnim = null
 func _ready():
 	upper_front_ray.add_exception(get_node("./"))
 	front_ray.add_exception(get_node("./"))
-	anim.get_animation("Run").set_loop(true)
+	anim.get_animation("Running").set_loop(true)
 	coyoteJump = get_node("CoyoteJump")
 func spawnDust():		# Spawn dust function
 	$DustSpawner.spawnDust()
@@ -129,7 +129,7 @@ func _physics_process(delta):
 	if is_on_floor():
 		airTime = 0
 		if mv.length() > 0.5:
-			targetAnim = "Run"
+			targetAnim = "Running"
 		else:
 			targetAnim = "Idle"	
 	else:
@@ -150,7 +150,7 @@ func _physics_process(delta):
 			elif(airTime>1):
 				targetAnim = "Jump"
 			else:
-				targetAnim = "Run"
+				targetAnim = "Running"
 	
 #	vira pra onde anda,mude o * para mexer na velocidade de girar
 	if(grab):

@@ -955,3 +955,138 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -38.234, -0.391455, 28.0467 )
 
 [node name="Plank" parent="Structure1" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -41.4801, 0, 32.1537 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( -0.949859, -0.196244, -0.243424, -0.245936, -0.0118485, 0.969214, -0.193086, 0.980484, -0.0370091, -6.93094, 1.90556, 6.32717 )
+light_energy = 0.1
+light_indirect_energy = 0.1
+shadow_enabled = true
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control"]
+anchor_right = 1.0
+margin_top = 19.0452
+margin_bottom = 97.0452
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/HBoxContainer"]
+margin_right = 565.0
+margin_bottom = 78.0
+size_flags_horizontal = 11
+size_flags_vertical = 3
+size_flags_stretch_ratio = 7.19
+
+[node name="Life" type="ProgressBar" parent="Control/HBoxContainer/VBoxContainer"]
+margin_right = 565.0
+margin_bottom = 37.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Stamina" type="ProgressBar" parent="Control/HBoxContainer/VBoxContainer"]
+margin_top = 41.0
+margin_right = 565.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="Control/HBoxContainer"]
+margin_left = 569.0
+margin_right = 951.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.87
+
+[node name="Item1" type="Panel" parent="Control/HBoxContainer"]
+margin_left = 955.0
+margin_right = 1033.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Sprite" type="TextureRect" parent="Control/HBoxContainer/Item1"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -60.0
+margin_bottom = 60.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Number" type="Label" parent="Control/HBoxContainer/Item1"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -18.0
+margin_right = 32.0
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Item2" type="Panel" parent="Control/HBoxContainer"]
+margin_left = 1037.0
+margin_right = 1115.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Sprite" type="TextureRect" parent="Control/HBoxContainer/Item2"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -60.0
+margin_bottom = 60.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Number" type="Label" parent="Control/HBoxContainer/Item2"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -18.0
+margin_right = 32.0
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Item3" type="Panel" parent="Control/HBoxContainer"]
+margin_left = 1119.0
+margin_right = 1200.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Sprite" type="TextureRect" parent="Control/HBoxContainer/Item3"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -60.0
+margin_bottom = 60.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Number" type="Label" parent="Control/HBoxContainer/Item3"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -18.0
+margin_right = 32.0
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
